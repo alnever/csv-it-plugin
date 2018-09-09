@@ -2,7 +2,7 @@
 /*
 Plugin Name: CSV It Plugin
 Plugin Uri: https://github.com/alnever/html-it-plugin
-Description: The shortcode allows to download a table within it as a CSV-file
+Description: The shortcode allows to download a table as a CSV-file
 Version: 1.0
 Author: Alex Neverov
 Author URI: http://alneverov.ru
@@ -37,7 +37,7 @@ spl_autoload_register(
  }
 );
 
-class Scv_It_Plugin {
+class Csv_It_Plugin {
   public function __construct() {
     new Csv_It();
   }

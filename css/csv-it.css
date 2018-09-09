@@ -3,9 +3,16 @@
 }
 
 .csv-it-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-bottom: -80px;
+}
 
+.csv-it-link {
+  cursor: pointer;
 }
 
 .csv-it-result {
-  display: none; !important;
+  display: none !important;
 }

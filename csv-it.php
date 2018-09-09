@@ -14,7 +14,7 @@ namespace CsvItPlugin;
 class Csv_It {
 
   public function __construct() {
-    add_action('wp_enqueue_scripts', array($this, 'enqueue_sripts'));
+    add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
     add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
     add_shortcode('csv_it',array($this, 'shortcode'));
   }
@@ -23,7 +23,7 @@ class Csv_It {
   This method implements an injection of the plugin's style sheet
   */
 
-  public function enquque_styles() {
+  public function enqueue_styles() {
     wp_enqueue_style(
 			"csv-it-css",
 			sprintf("%scss/csv-it.css", plugin_dir_url(__FILE__)),
@@ -37,7 +37,7 @@ class Csv_It {
 	public function enqueue_scripts() {
 		wp_enqueue_script(
 			"scv-it-script",
-			sprintf("%sjs/scv-it.js", plugin_dir_url(__FILE__)),
+			sprintf("%sjs/csv-it.js", plugin_dir_url(__FILE__)),
 			array("jquery"),
 			false, false
 		);
@@ -52,19 +52,19 @@ class Csv_It {
 
     $content = do_shortcode($content);
 
-    $separator = isset($atts["$separator"]) ? $atts["separator"] : ",";
+    $separator = isset($atts["separator"]) ? $atts["separator"] : ",";
 
     return sprintf(
 			'<div class="csv-it-block">
 				<div class="csv-it-header">
-					<a id="csv-it-link" name="csv-it-link">
-						<img src="%s" id="csv-it-img" name="csv-it-img" alt="CSV" title="CSV" />
+					<a class="csv-it-link">
+						<img src="%s" alt="CSV" title="CSV" width="20" height="20" />
 					</a>
 				</div>
-				<div id="csv-it-source" name="csv-it-source">%s</div>
-				<div class="csv-it-result" id="csv-it-result" name="csv-it-result">%s</div>
+				<div class="csv-it-source" name="csv-it-source">%s</div>
+				<div class="csv-it-result" name="csv-it-result">%s</div>
 			</div>',
-			sprintf("%simg/csv.png", plugin_dir_url(__FILE__)), // image source file
+			sprintf("%simg/csv-it.png", plugin_dir_url(__FILE__)), // image source file
 			$content, // content (source)
 			$this->prepare_csv($content,$separator) // Transformed content - the result of the convertion
 		);
@@ -77,7 +77,7 @@ class Csv_It {
   and create a csv version of the table data
   */
 
-  public function prepare_scv($content, $separator) {
+  public function prepare_csv($content, $separator) {
     $res = "<div class=''>";
 
     // simplify tags
@@ -95,6 +95,8 @@ class Csv_It {
     $content = preg_replace("/<th>/","<td>", $content);
     $content = preg_replace("/<\/th>/","</td>", $content);
 
+    $content = str_replace("&nbsp;","",$content);
+
     // get all rows in content
     preg_match_all("/<tr>(.*?)<\/tr>/is", $content, $rows);
     foreach($rows[1] as $row) {
@@ -107,7 +109,7 @@ class Csv_It {
         $res .= "\n";
     }
 
-    $res .= "</div>"
+    $res .= "</div>";
 
     return $res;
   }
